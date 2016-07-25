@@ -15,6 +15,22 @@ public class VideoPlayer : MonoBehaviour
 
 	public GameObject StartText;
 
+
+    void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            StartVideo(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            StartVideo(0);
+        }
+
+    }
+
 	public void StartVideo(int hand){
 
 
@@ -35,6 +51,22 @@ public class VideoPlayer : MonoBehaviour
 
 		}
 
+        if(PaintingHand == Handedness.Right)
+        {
+
+            leftSphere.transform.localScale = new Vector3(10, 10, -10);
+            rightSphere.transform.localScale = new Vector3(10, 10, -10);
+        }
+        else
+        {
+
+            leftSphere.transform.localScale = new Vector3(10, 10, 10);
+            rightSphere.transform.localScale = new Vector3(10, 10, 10);
+        }
+
+
+        GetComponent<AudioSource>().Play();
+
 
 		IsPlaying = true;
 
@@ -43,7 +75,7 @@ public class VideoPlayer : MonoBehaviour
 
 	IEnumerator PlayingCheck(){
 
-		yield return new WaitUntil (() => ((MovieTexture)rightSphere.GetComponent<Renderer> ().material.mainTexture).isPlaying);
+        yield return new WaitForSeconds(((MovieTexture)rightSphere.GetComponent<Renderer>().material.mainTexture).duration);
 
 
 		IsPlaying = false;
