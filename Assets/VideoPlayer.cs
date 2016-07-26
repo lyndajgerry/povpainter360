@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.VR;
 
 public class VideoPlayer : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class VideoPlayer : MonoBehaviour
 
 	public GameObject StartText;
 
+    bool IsPaused = false;
 
     void Update()
     {
@@ -27,6 +29,23 @@ public class VideoPlayer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             StartVideo(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            InputTracking.Recenter();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && IsPlaying)
+        {
+            if (!IsPaused)
+            {
+                PauseVideo();
+            }
+            else
+            {
+                ResumeVideo();
+            }
         }
 
     }
@@ -70,10 +89,29 @@ public class VideoPlayer : MonoBehaviour
 
 		IsPlaying = true;
 
-		StartCoroutine(PlayingCheck());
+
+		//StartCoroutine(PlayingCheck());
 	}
 
-	IEnumerator PlayingCheck(){
+    void PauseVideo()
+    {
+        ((MovieTexture)leftSphere.GetComponent<Renderer>().material.mainTexture).Pause();
+        ((MovieTexture)rightSphere.GetComponent<Renderer>().material.mainTexture).Pause();
+        GetComponent<AudioSource>().Pause();
+
+        IsPaused = true;
+    }
+
+    void ResumeVideo()
+    {
+        ((MovieTexture)leftSphere.GetComponent<Renderer>().material.mainTexture).Play();
+        ((MovieTexture)rightSphere.GetComponent<Renderer>().material.mainTexture).Play();
+        GetComponent<AudioSource>().UnPause();
+
+        IsPaused = false;
+    }
+
+    IEnumerator PlayingCheck(){
 
         yield return new WaitForSeconds(((MovieTexture)rightSphere.GetComponent<Renderer>().material.mainTexture).duration);
 
